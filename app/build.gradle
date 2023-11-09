@@ -1,0 +1,151 @@
+buildscript {
+    ext.kotlin_version = '{{ site.data.releases.latest.version }}'
+}
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+    id 'androidx.navigation.safeargs'
+}
+
+android {
+    namespace 'com.example.weatherforecast'
+    compileSdk 33
+
+
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId "com.example.weatherforecast"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    splits {
+        // Configures multiple APKs based on screen density.
+        density {
+            // Configures multiple APKs based on screen density.
+            enable true
+            // Specifies a list of screen densities you don't want Gradle to create multiple APKs for.
+            exclude("ldpi", "xxhdpi", "xxxhdpi")
+            // Specifies a list of compatible screen size settings for the manifest.
+            compatibleScreens("small", "normal", "large")
+        }
+
+        // Configures multiple APKs based on ABI.
+        abi {
+            // Enables building multiple APKs per ABI.
+            enable true
+            // By default all ABIs are included, so use reset() and include to specify that you only
+            // want APKs for x86 and x86_64.
+            // Resets the list of ABIs for Gradle to create APKs for to none.
+            reset()
+            // Specifies a list of ABIs for Gradle to create APKs for.
+            include("x86", "x86_64")
+            // Specifies that you don't want to also generate a universal APK that includes all ABIs.
+            universalApk false
+        }
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+           // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+    configurations.all {
+        resolutionStrategy {
+            eachDependency {
+                if ((requested.group == "org.jetbrains.kotlin") && (requested.name.startsWith("kotlin-stdlib"))) {
+                    useVersion("1.6.10")
+                }
+            }
+        }
+    }
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
+
+}
+
+
+
+
+dependencies {
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    implementation 'com.google.android.material:material:1.8.0'
+
+    implementation 'androidx.fragment:fragment-ktx:1.5.5'
+
+    implementation 'androidx.room:room-runtime:2.5.0'
+    implementation 'androidx.room:room-ktx:2.5.0'
+    implementation 'androidx.room:room-rxjava2:2.5.0'
+    kapt 'androidx.room:room-compiler:2.5.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    implementation 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
+
+    implementation "com.google.dagger:hilt-android:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.45"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.0"
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    //Unit test
+    testImplementation 'org.robolectric:robolectric:4.9'
+    // For Robolectric tests.
+    testImplementation "com.google.dagger:hilt-android-testing:2.45"
+    testImplementation 'org.robolectric:robolectric:4.9'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.5'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test:runner:1.5.2'
+
+    kaptTest "com.google.dagger:hilt-android-compiler:2.45"
+
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
+    androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.5.1'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
+
+
+
+
+
+
+
+
+
+}
